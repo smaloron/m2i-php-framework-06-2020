@@ -3,6 +3,7 @@
 // Définition des chemins de l'application
 define("CONTROLLER_PATH", "../controllers/");
 define("VIEW_PATH", "../views/");
+define("MODEL_PATH", "../models/");
 
 // Récupération du nom du contrôleur
 $controller = filter_input(INPUT_GET, "c", FILTER_SANITIZE_URL);
