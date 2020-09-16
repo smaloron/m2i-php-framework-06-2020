@@ -1,4 +1,10 @@
 <?php
+// Démarrage de la session
+session_start();
+
+// Récupération de l'utilisateur connecté
+// S'il n'existe pas définition d'un utilisateur anonyme
+$currentUser = $_SESSION["user"] ?? ["user_name" => "Anonyme"];
 
 // Définition des chemins de l'application
 define("CONTROLLER_PATH", "../controllers/");

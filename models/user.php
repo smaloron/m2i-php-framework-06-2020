@@ -12,7 +12,8 @@ function authenticate($login, $pass): bool
 
     $user = $statement->fetch(PDO::FETCH_ASSOC);
 
-    var_dump($user);
+    // Enregistrement de l'utilisateur dans la session
+    $_SESSION["user"] = $user;
 
     $isAuthenticated = $user && count($user) > 0;
     return $isAuthenticated;
