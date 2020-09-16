@@ -2,6 +2,13 @@
     <h1>Inscription des utilisateurs</h1>
 
     <!-- Affichage des erreurs -->
+    <?php if (count($errors) > 0) : ?>
+    <ul class="alert alert-danger">
+        <?php foreach ($errors as $message) : ?>
+        <li><?= $message ?></li>
+        <?php endforeach ?>
+    </ul>
+    <?php endif ?>
 
     <form method="post">
         <div class="form-group">
