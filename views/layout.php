@@ -38,12 +38,19 @@
                 <li class="nav-item <?= $controller == "liste-livres" ? "active" : "" ?>">
                     <a class="nav-link" href="/index.php?c=liste-livres">Liste des livres</a>
                 </li>
+
+                <?php if (isset($currentUser["id"])) : ?>
+                <li class="nav-item">
+                    <a class="nav-link" href="index.php?c=deconnexion">Déconnexion</a>
+                </li>
+                <?php else : ?>
                 <li class="nav-item <?= $controller == "connexion" ? "active" : "" ?>">
                     <a class="nav-link" href="/index.php?c=connexion">Connexion</a>
                 </li>
                 <li class="nav-item <?= $controller == "inscription" ? "active" : "" ?>">
                     <a class="nav-link" href="/index.php?c=inscription">Inscription</a>
                 </li>
+                <?php endif ?>
 
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"

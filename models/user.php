@@ -12,6 +12,7 @@ function authenticate($login, $pass): bool
 
     $user = $statement->fetch(PDO::FETCH_ASSOC);
 
+    session_regenerate_id(true);
     // Enregistrement de l'utilisateur dans la session
     $_SESSION["user"] = $user;
 
