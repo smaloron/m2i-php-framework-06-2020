@@ -20,7 +20,8 @@ if ($isPosted) {
 
     // Authentification
     if (authenticate($login, $pass) && empty($error)) {
-        $message = "OK";
+        // Rediretion vers la page d'accueil
+        header("location:index.php?c=home");
     } else {
         $message = "KO";
     }
