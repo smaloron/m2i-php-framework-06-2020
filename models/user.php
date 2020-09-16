@@ -1,21 +1,41 @@
 <?php
 
+require_once MODEL_PATH . "pdo.php";
+
 function authenticate($login, $pass): bool
 {
-    // Connexion au serveur de base de données
-    $dsn = "mysql:host=localhost;dbname=formation;charset=utf8";
-    $pdo = new PDO($dsn, "root", "");
+    $pdo = getPDO();
 
-    $sql = "SELECT * FROM users WHERE user_email= ? AND user_password= ?";
+
+
+    $sql = "SELECT * FROM users WHERE user_email= ?";
     $statement = $pdo->prepare($sql);
-    $statement->execute([$login, $pass]);
+    $statement->execute([$login]);
 
     $user = $statement->fetch(PDO::FETCH_ASSOC);
 
-    session_regenerate_id(true);
-    // Enregistrement de l'utilisateur dans la session
-    $_SESSION["user"] = $user;
+    if ($user && count($user) > 0 && password_verify($pass, $user["user_password"])) {
+        session_regenerate_id(true);
+        // Enregistrement de l'utilisateur dans la session
+        $_SESSION["user"] = $user;
+        $isAuthenticated = true;
+    } else {
+        $isAuthenticated = false;
+    }
 
-    $isAuthenticated = $user && count($user) > 0;
     return $isAuthenticated;
+}
+
+function register(array $userData)
+{
+    $pdo = getPDO();
+
+    $userData["user_password"] = password_hash($userData["user_password"], PASSWORD_DEFAULT);
+
+    $sql = "INSERT INTO users (user_name, user_email, user_password) 
+    VALUES (:user_name, :user_email, :user_password)";
+    $statement = $pdo->prepare($sql);
+    $affectedRow = $statement->execute($userData);
+
+    return $affectedRow > 0;
 }

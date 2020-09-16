@@ -1,5 +1,5 @@
 <?php
-
+require MODEL_PATH . "user.php";
 // Récupération des données
 $rules = [
     "user_name" => FILTER_SANITIZE_STRING,
@@ -16,6 +16,8 @@ $isPosted = count($_POST) > 0;
 $errors = [];
 
 if ($isPosted) {
+
+    // Les tests de validation
     if (empty($userData["user_name"])) {
         array_push($errors, "Le nom ne peut être vide");
     }
@@ -36,6 +38,19 @@ if ($isPosted) {
 
     if ($userData["user_email"] != $userData["user_email_confirm"]) {
         array_push($errors, "L'adresse email et la confirmation doivent être identiques");
+    }
+
+    // Le traitement du formulaire si les données sont valides
+    if (count($errors) == 0) {
+        // Suppression des champs de confirmation de userData
+        unset($userData["user_email_confirm"]);
+        unset($userData["user_password_confirm"]);
+
+        if (register($userData)) {
+            header("location:index.php?c=home");
+        } else {
+            array_push($errors, "Impossible d'insérer vos données dans la base");
+        }
     }
 }
 
