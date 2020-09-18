@@ -36,10 +36,18 @@ if ($isPosted) {
     // Sinon définition d'une erreur qui sera affichée dans la vue
     if (count($errors) == 0) {
 
-        if (insertProduct($product)) {
-            header("location:index.php?c=liste-produits");
-        } else {
-            array_push($errors, "Impossible d'insérer vos données dans la base");
+        try {
+            if (insertProduct($product)) {
+                header("location:index.php?c=liste-produits");
+            } else {
+                array_push($errors, "Impossible d'insérer vos données dans la base");
+            }
+        } catch (PDOException $ex) {
+            array_push($errors, "Une erreur de la base de données empêche le traitement");
+            // Todo : Enregistrer le message d'erreur dans un fichier error.log à la racine du site
+            $fileName = "../error.log";
+            $content = date("Y-m-d H:i:s") . "\t" . $ex->getMessage() . "\n";
+            file_put_contents($fileName, $content, FILE_APPEND | LOCK_EX);
         }
     }
 }
