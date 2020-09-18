@@ -39,4 +39,19 @@ function deleteOneProductById($id)
  */
 function insertProduct(array $product)
 {
+    // Connexion à la base de données
+    $pdo = getPDO();
+
+    // Requête SQL
+    $sql = "INSERT INTO products (product_name, price, category) 
+    VALUES (:product_name, :price, :category)";
+
+    // Préparation de la requête
+    $statement = $pdo->prepare($sql);
+
+    // Exécution de la requête
+    $affectedRow = $statement->execute($product);
+
+    // Retour de la fonction
+    return $affectedRow > 0;
 }
