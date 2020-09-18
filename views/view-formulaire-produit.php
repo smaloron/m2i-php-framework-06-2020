@@ -11,7 +11,7 @@
         </div>
         <div class="form-group">
             <label>Prix</label>
-            <input type="number" class="form-control" name="price">
+            <input type="number" step="0.01" class="form-control" name="price">
         </div>
 
         <button type="submit" class="btn btn-primary">Valider</button>
