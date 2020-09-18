@@ -5,7 +5,10 @@ require MODEL_PATH . "product.php";
 // Récupération des données si elles ont été postées
 $rules = [
     "product_name"  => FILTER_SANITIZE_STRING,
-    "price"         => FILTER_SANITIZE_NUMBER_INT,
+    "price"         => [
+        "filter" => FILTER_SANITIZE_NUMBER_FLOAT,
+        "flags" => FILTER_FLAG_ALLOW_FRACTION
+    ],
     "category"      => FILTER_SANITIZE_STRING
 ];
 
@@ -24,6 +27,8 @@ if ($isPosted) {
     if (empty($product["category"])) {
         array_push($errors, "La catégorie ne peut être vide");
     }
+
+    var_dump($product);
 
     // Si les données sont valides on appelle une fonction
     // insertProduct en passant les données du produit à insérer
