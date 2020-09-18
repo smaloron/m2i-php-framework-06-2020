@@ -1,4 +1,9 @@
 <div class="col-md-8">
+
+    <div class="mt-3 mb-2">
+        <a href="index.php?c=formulaire-produit" class="btn btn-primary">Nouveau produit</a>
+    </div>
+
     <table class="table table-bordered table-striped">
         <thead>
             <tr>

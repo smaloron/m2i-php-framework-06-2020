@@ -29,3 +29,14 @@ function deleteOneProductById($id)
     // avec définition de la valeur des paramètres
     return $statement->execute([$id]);
 }
+
+/**
+ * Insertion d'un produit dans la base de données
+ * en fonction de données passées en argument
+ *
+ * @param array $product
+ * @return void
+ */
+function insertProduct(array $product)
+{
+}
