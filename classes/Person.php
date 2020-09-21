@@ -3,16 +3,25 @@
 class Person
 {
 
+    const COLOR_BLUE = "#00FFFF";
+    const COLOR_GREEN = "#00FF00";
+
+    public static $numberOfInstances = 0;
+
     private $name;
 
     private $gender;
 
-    public function __construct(array $data)
+    private $eyeColor;
+
+    public function __construct(array $data = [])
     {
         if (count($data) > 0 && isset($data["name"]) && isset($data["gender"])) {
             $this->setName($data["name"]);
             $this->setGender($data["gender"]);
         }
+
+        self::$numberOfInstances++;
     }
 
     public function getName()
@@ -41,6 +50,11 @@ class Person
         }
         $this->gender = $value;
         return $this;
+    }
+
+    public function setEyeColor($value)
+    {
+        $this->eyeColor = $value;
     }
 
     public function greet()
