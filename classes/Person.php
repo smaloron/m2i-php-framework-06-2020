@@ -7,10 +7,12 @@ class Person
 
     private $gender;
 
-    public function __construct($name, $gender)
+    public function __construct(array $data)
     {
-        $this->name = $this->setName($name);
-        $this->gender = $this->setGender($gender);
+        if (count($data) > 0 && isset($data["name"]) && isset($data["gender"])) {
+            $this->setName($data["name"]);
+            $this->setGender($data["gender"]);
+        }
     }
 
     public function getName()

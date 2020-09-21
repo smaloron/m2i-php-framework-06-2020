@@ -1,9 +1,7 @@
 <?php
 require "../classes/Person.php";
+require "../classes/Htmlist.php";
 
-$joe = new Person("", "m");
-// $joe->setName("Joe le taxi")->setGender("1235");
-echo $joe->greet() . "<br>";
+$liste = new HtmlList(["items" => ["Chocolat", "Oeufs", "Abergines"]]);
 
-$jane = new Person("Jane Doe", "f");
-echo $jane->greet();
+var_dump($liste);
