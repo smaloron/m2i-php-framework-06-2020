@@ -2,6 +2,8 @@
 // Démarrage de la session
 session_start();
 
+require "../autoload.php";
+
 // Récupération de l'utilisateur connecté
 // S'il n'existe pas définition d'un utilisateur anonyme
 if (isset($_SESSION["user"]) && $_SESSION["user"]) {
