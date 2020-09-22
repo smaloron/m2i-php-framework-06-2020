@@ -3,10 +3,11 @@
 class QueryBuilder
 {
 
-
     private $commandValue;
 
     private $fromValue;
+
+    private array $whereValues = [];
 
     public function select(string $value)
     {
@@ -20,8 +21,20 @@ class QueryBuilder
         return $this;
     }
 
+    public function where(array $values)
+    {
+        $this->whereValues = $values;
+        return $this;
+    }
+
     public function getSQL()
     {
-        return $this->commandValue . " " . $this->fromValue;
+        $sql = $this->commandValue . " " . $this->fromValue;
+
+        if (count($this->whereValues) > 0) {
+            $sql .= " WHERE " . join(" AND ", $this->whereValues);
+        }
+
+        return $sql;
     }
 }
