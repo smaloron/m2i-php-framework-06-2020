@@ -1,6 +1,6 @@
 <?php
 
-class Sparrow extends Animal
+class Sparrow extends Animal implements ICanFly
 {
     public function peck()
     {
@@ -9,6 +9,11 @@ class Sparrow extends Animal
 
     public function move()
     {
-        echo "<p>Je vole</p>";
+        echo "<p>Je vole en battant des ailes</p>";
+    }
+
+    public function fly()
+    {
+        $this->move();
     }
 }

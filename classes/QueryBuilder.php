@@ -7,7 +7,7 @@ class QueryBuilder
 
     private $fromValue;
 
-    private array $whereValues = [];
+    private $whereValues = [];
 
     public function select(string $value)
     {
