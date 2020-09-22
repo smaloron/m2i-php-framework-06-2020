@@ -14,13 +14,19 @@ class Person
 
     private $eyeColor;
 
-    public function __construct(array $data = [])
+    /**
+     * @var Address
+     */
+    private $address;
+
+    public function __construct(array $data = [], Address $address = null)
     {
         if (count($data) > 0 && isset($data["name"]) && isset($data["gender"])) {
             $this->setName($data["name"]);
             $this->setGender($data["gender"]);
         }
 
+        $this->address = $address;
         self::$numberOfInstances++;
     }
 
@@ -57,10 +63,26 @@ class Person
         $this->eyeColor = $value;
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param Address $address
+     * @return Person
+     */
+    public function setAddress(Address $address)
+    {
+        $this->address = $address;
+        return $this;
+    }
+
     public function greet()
     {
         $greeting = $this->gender == "m" ? "monsieur " : "madame ";
         $greeting = $greeting . $this->name;
-        return "Bonjour $greeting";
+
+        if ($this->address) {
+            $greeting .= " vous habitez au " . $this->address;
+        }
+        return "Bonjour $greeting ";
     }
 }

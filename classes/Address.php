@@ -45,4 +45,9 @@ class Address
     {
         $this->city = $value;
     }
+
+    public function __toString()
+    {
+        return $this->street . " " . $this->zipCode . " " . $this->city;
+    }
 }
