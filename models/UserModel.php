@@ -56,4 +56,38 @@ class UserModel
         $this->name = $name;
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getNEmail(): string
+    {
+        return $this->email;
+    }
+    /**
+     * @param string $name
+     * @return UserModel
+     */
+    public function setEmail(string $email): UserModel
+    {
+        $this->email = $email;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+    /**
+     * @param string $name
+     * @return UserModel
+     */
+    public function setPassword(string $password): UserModel
+    {
+        $this->password = $password;
+        return $this;
+    }
 }
