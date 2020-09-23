@@ -3,7 +3,7 @@
 /**
  * Classe d'accès au données de la table users
  */
-class UserDAO
+class UserDAO implements DAOInterface
 {
 
     /**
