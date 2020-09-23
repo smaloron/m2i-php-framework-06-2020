@@ -92,5 +92,25 @@ class UserDAO
      */
     public function deleteOneById(int $id): bool
     {
+        // La requête SQL
+        $sql = "DELETE FROM users WHERE id = ?";
+
+        // Préparation de la requête sur la base de données
+        $statement = $this->connection->prepare($sql);
+        // Exécution de la requête préparée
+        return $statement->execute([$id]);
+    }
+
+    /**
+     * Met à jour un utilisateur en fonction d'un tabeau $data
+     * ce tableau doit impérativement avoir une clef id
+     * Si ce tableau n'a pas de clef id on renvoie une exception
+     * La fonction retourne un booléen
+     *
+     * @param [type] $data
+     * @return bool
+     */
+    public function updateOne($data): bool
+    {
     }
 }

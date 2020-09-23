@@ -12,6 +12,6 @@ $newUser = [
     "user_password" => "123"
 ];
 
-var_dump($userDAO->insertOne($newUser));
+var_dump($userDAO->deleteOneById(4));
 
 var_dump($userDAO->findAll());
