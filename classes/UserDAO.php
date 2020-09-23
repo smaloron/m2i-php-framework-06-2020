@@ -112,5 +112,20 @@ class UserDAO
      */
     public function updateOne($data): bool
     {
+        // Requêt SQL
+        $sql = "UPDATE users SET 
+            user_name=:user_name, 
+            user_email=:user_email, 
+            user_password=:user_password 
+            WHERE id=:id";
+
+        if (!isset($data["id"])) {
+            throw new Exception("Les données de la mise à jour doivent comporter une clef id");
+        }
+
+        // Préparation de la requête sur la base de données
+        $statement = $this->connection->prepare($sql);
+        // Exécution de la requête préparée
+        return $statement->execute($data);
     }
 }
