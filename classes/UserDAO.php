@@ -26,31 +26,75 @@ class UserDAO implements DAOInterface
     /**
      * Sélection de toutes les données de la table users
      *
-     * @return array
+     * @return UserModel[]
      */
-    public function findAll(): array
+    public function findAll(string $orderBy = ""): array
     {
         // La requête SQL
-        $sql = "SELECT * FROM users";
+        $sql = "SELECT 
+                id, user_name as name, 
+                user_email as email, user_password as password 
+                FROM users";
+        if (!empty($orderBy)) {
+            $sql .= " ORDER BY $orderBy";
+        }
         // Préparation de la requête sur la base de données
         $statement = $this->connection->prepare($sql);
         // Exécution de la requête préparée
         $statement->execute();
 
         // Retourne la liste des utilisateurs sous la forme d'un tableau
-        return $statement->fetchAll(PDO::FETCH_ASSOC);
+        $statement->setFetchMode(PDO::FETCH_CLASS, "UserModel");
+        return $statement->fetchAll();
+    }
+
+    public function find(array $search = [], string $orderBy = ""): array
+    {
+        // La requête SQL
+        $sql = "SELECT 
+                id, user_name as name, 
+                user_email as email, user_password as password 
+                FROM users";
+
+        if (count($search) > 0) {
+            $sql .= " WHERE ";
+            $fields = array_keys($search);
+
+            $fields = array_map(function ($item) {
+                return $item . "=:" . $item;
+            }, $fields);
+
+            $sql .= implode(" AND ", $fields);
+        }
+
+        if (!empty($orderBy)) {
+            $sql .= " ORDER BY $orderBy";
+        }
+
+        var_dump($sql);
+        // Préparation de la requête sur la base de données
+        $statement = $this->connection->prepare($sql);
+        // Exécution de la requête préparée
+        $statement->execute($search);
+
+        // Retourne la liste des utilisateurs sous la forme d'un tableau
+        $statement->setFetchMode(PDO::FETCH_CLASS, "UserModel");
+        return $statement->fetchAll();
     }
 
     /**
      * Sélection d'un utilisateur en fonction de son id
      *
      * @param integer $id
-     * @return array
+     * @return UserModel
      */
-    public function findOneById(int $id): array
+    public function findOneById(int $id): UserModel
     {
         // La requête SQL
-        $sql = "SELECT * FROM users WHERE id = ?";
+        $sql = "SELECT 
+                id, user_name as name, 
+                user_email as email, user_password as password 
+                FROM users WHERE id = ?";
 
         // Préparation de la requête sur la base de données
         $statement = $this->connection->prepare($sql);
@@ -58,17 +102,18 @@ class UserDAO implements DAOInterface
         $statement->execute([$id]);
 
         // Retourne un utilisateur sous la forme d'un tableau associatif
-        return $statement->fetch(PDO::FETCH_ASSOC);
+        $statement->setFetchMode(PDO::FETCH_CLASS, "UserModel");
+        return $statement->fetch();
     }
 
     /**
      * Insère un nouvel utilisateur dans la base 
      * et retourne l'id généré par cette insertion
      *
-     * @param array $data
-     * @return int
+     * @param UserModel $user
+     * @return void
      */
-    public function insertOne(array $data): int
+    private function insertOne(UserModel $user): void
     {
         // Requêt SQL
         $sql = "INSERT INTO users (user_name, user_email, user_password)
@@ -76,11 +121,18 @@ class UserDAO implements DAOInterface
 
         // Préparation de la requête sur la base de données
         $statement = $this->connection->prepare($sql);
-        // Exécution de la requête préparée
-        $statement->execute($data);
 
-        // retourne l'id généré par l'insertion
-        return $this->connection->lastInsertId();
+        // Définition des valeurs passée à la requête préparée
+        $statement->bindValue(":user_name", $user->getName());
+        $statement->bindValue(":user_email", $user->getEmail());
+        $statement->bindValue(":user_password", $user->getPassword());
+
+        // Exécution de la requête préparée
+        $statement->execute();
+
+        // Affecte l'id généré par l'insertion à l'objet
+        $generatedId = $this->connection->lastInsertId();
+        $user->setId($generatedId);
     }
 
     /**
@@ -108,9 +160,9 @@ class UserDAO implements DAOInterface
      * La fonction retourne un booléen
      *
      * @param [type] $data
-     * @return bool
+     * @return void
      */
-    public function updateOne($data): bool
+    private function updateOne(UserModel $user): void
     {
         // Requêt SQL
         $sql = "UPDATE users SET 
@@ -119,13 +171,25 @@ class UserDAO implements DAOInterface
             user_password=:user_password 
             WHERE id=:id";
 
-        if (!isset($data["id"])) {
-            throw new Exception("Les données de la mise à jour doivent comporter une clef id");
-        }
-
         // Préparation de la requête sur la base de données
         $statement = $this->connection->prepare($sql);
+
+        // Définition des valeurs passée à la requête préparée
+        $statement->bindValue(":user_name", $user->getName());
+        $statement->bindValue(":user_email", $user->getEmail());
+        $statement->bindValue(":user_password", $user->getPassword());
+        $statement->bindValue(":id", $user->getId());
+
         // Exécution de la requête préparée
-        return $statement->execute($data);
+        $statement->execute();
+    }
+
+    public function save(UserModel $user): void
+    {
+        if (empty($user->getId())) {
+            $this->insertOne($user);
+        } else {
+            $this->updateOne($user);
+        }
     }
 }

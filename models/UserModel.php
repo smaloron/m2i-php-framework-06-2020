@@ -60,7 +60,7 @@ class UserModel
     /**
      * @return string
      */
-    public function getNEmail(): string
+    public function getEmail(): string
     {
         return $this->email;
     }
