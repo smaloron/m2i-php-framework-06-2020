@@ -7,7 +7,7 @@ class BookDAO implements BookDAOInterface
 {
 
     const SELECT_QUERY = "SELECT 
-                            id, title, author, genre
+                            id, title, author, genre,
                             published_at as publishedAt 
                             FROM books";
 
@@ -85,7 +85,7 @@ class BookDAO implements BookDAOInterface
      * Sélection d'un livre en fonction de son id
      *
      * @param integer $id
-     * @return BookModel
+     * @return BookModel | bool
      */
     public function findOneById(int $id): BookModel
     {
@@ -99,7 +99,11 @@ class BookDAO implements BookDAOInterface
 
         // Retourne un utilisateur sous la forme d'un tableau associatif
         $statement->setFetchMode(PDO::FETCH_CLASS, "BookModel");
-        return $statement->fetch();
+        $data =  $statement->fetch();
+        if (!$data) {
+            throw new RecordNotFoundException("Aucun résultat pour cet id");
+        }
+        return $data;
     }
 
     /**
@@ -122,7 +126,7 @@ class BookDAO implements BookDAOInterface
         $statement->bindValue(":title", $book->getTitle());
         $statement->bindValue(":author", $book->getAuthor());
         $statement->bindValue(":genre", $book->getGenre());
-        $statement->bindValue(":published_at", $book->getPublishedAt());
+        $statement->bindValue(":published_at", $book->getPublishedAt()->format('Y-m-d'));
 
         // Exécution de la requête préparée
         $statement->execute();
@@ -133,7 +137,7 @@ class BookDAO implements BookDAOInterface
     }
 
     /**
-     * Supprime un utilisateur en fonction de son id
+     * Supprime un livre en fonction de son id
      * et retourne un booléen indiquant que la suppression est effective
      *
      * @param integer $id
@@ -142,7 +146,7 @@ class BookDAO implements BookDAOInterface
     public function deleteOneById(int $id): bool
     {
         // La requête SQL
-        $sql = "DELETE FROM users WHERE id = ?";
+        $sql = "DELETE FROM books WHERE id = ?";
 
         // Préparation de la requête sur la base de données
         $statement = $this->connection->prepare($sql);
@@ -151,42 +155,41 @@ class BookDAO implements BookDAOInterface
     }
 
     /**
-     * Met à jour un utilisateur en fonction d'un tabeau $data
-     * ce tableau doit impérativement avoir une clef id
-     * Si ce tableau n'a pas de clef id on renvoie une exception
-     * La fonction retourne un booléen
+     * Met à jour un livre en fonction d'un object $book
      *
      * @param [type] $data
      * @return void
      */
-    private function updateOne(UserModel $user): void
+    private function updateOne(BookModel $book): void
     {
         // Requêt SQL
-        $sql = "UPDATE users SET 
-            user_name=:user_name, 
-            user_email=:user_email, 
-            user_password=:user_password 
+        $sql = "UPDATE books SET 
+            title=:title, 
+            author=:author, 
+            genre=:genre
+            published_at=:published_at 
             WHERE id=:id";
 
         // Préparation de la requête sur la base de données
         $statement = $this->connection->prepare($sql);
 
         // Définition des valeurs passée à la requête préparée
-        $statement->bindValue(":user_name", $user->getName());
-        $statement->bindValue(":user_email", $user->getEmail());
-        $statement->bindValue(":user_password", $user->getPassword());
-        $statement->bindValue(":id", $user->getId());
+        $statement->bindValue(":title", $book->getTitle());
+        $statement->bindValue(":author", $book->getAuthor());
+        $statement->bindValue(":genre", $book->getGenre());
+        $statement->bindValue(":published_at", $book->getPublishedAt()->format('Y-m-d'));
+        $statement->bindValue(":id", $book->getId());
 
         // Exécution de la requête préparée
         $statement->execute();
     }
 
-    public function save(UserModel $user): void
+    public function save(BookModel $book): void
     {
-        if (empty($user->getId())) {
-            $this->insertOne($user);
+        if (empty($book->getId())) {
+            $this->insertOne($book);
         } else {
-            $this->updateOne($user);
+            $this->updateOne($book);
         }
     }
 }
