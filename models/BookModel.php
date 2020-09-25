@@ -99,6 +99,9 @@ class BookModel
      */
     public function getPublishedAt(): DateTime
     {
+        if (is_string($this->publishedAt)) {
+            $this->publishedAt = new DateTime($this->publishedAt);
+        }
         return $this->publishedAt;
     }
     /**

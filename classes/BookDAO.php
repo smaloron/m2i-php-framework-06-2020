@@ -166,7 +166,7 @@ class BookDAO implements BookDAOInterface
         $sql = "UPDATE books SET 
             title=:title, 
             author=:author, 
-            genre=:genre
+            genre=:genre,
             published_at=:published_at 
             WHERE id=:id";
 
